@@ -1,16 +1,17 @@
-from urllib.request import urlopen
-from bs4 import  BeautifulSoup
-from requests_html import HTMLSession
-from selenium import webdriver
 import mechanicalsoup
 
 browser = mechanicalsoup.Browser()
-url = "http://olympus.realpython.org/profiles"
-page = browser.get(url)
-html = page.read().decode("utf-8")
-soup = BeautifulSoup(html, "html.parser")
-links = soup.find_all("a")
-for link in links:
-    link_url = url + link["href"]
-    print(link_url)
+url = "http://olympus.realpython.org/login"
+login_page = browser.get(url)
+login_html = login_page.soup
+
+#Login form inputs
+form = login_html.select("form")[0]
+form.select("input")[0]["value"] = "zeus"
+form.select("input")[1]["value"] = "ThunderDude"
+
+#Submit login form
+profiles_page = browser.submit(form, login_page.url)
+
+print(profiles_page.url)
 
